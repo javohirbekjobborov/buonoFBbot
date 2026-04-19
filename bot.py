@@ -1,4 +1,5 @@
 import logging
+import asyncio
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import (Application, CommandHandler, CallbackQueryHandler,
                           MessageHandler, filters, ContextTypes, ConversationHandler)
@@ -37,13 +38,12 @@ async def rating_chosen(update: Update, context: ContextTypes.DEFAULT_TYPE):
     q = update.callback_query
     await q.answer()
     context.user_data["rating"] = q.data
-    await q.edit_message_text(f"{'⭐'*int(q.data)} ({q.data}/5) baho berdingiz!\n\n"
-                              f"Izoh yozing yoki /skip bosing:")
+    await q.edit_message_text(f"{'⭐'*int(q.data)} ({q.data}/5) baho!\n\nIzoh yozing yoki /skip:")
     return COMMENT
 
 async def skip(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await send_to_group(update, context, None)
-    await update.message.reply_text("✅ Rahmat! /start — qayta boshlash")
+    await update.message.reply_text("✅ Rahmat! 🙏\n/start — qayta boshlash")
     return ConversationHandler.END
 
 async def comment_received(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -70,7 +70,9 @@ async def cancel(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text("❌ Bekor qilindi. /start")
     return ConversationHandler.END
 
-def main():
+async def run():
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
     app = Application.builder().token(TOKEN).build()
     app.add_handler(ConversationHandler(
         entry_points=[CommandHandler("start", start)],
@@ -83,7 +85,7 @@ def main():
         fallbacks=[CommandHandler("cancel", cancel)],
     ))
     print("Bot ishga tushdi!")
-    app.run_polling()
+    await app.run_polling()
 
 if __name__ == "__main__":
-    main()
+    asyncio.run(run())
