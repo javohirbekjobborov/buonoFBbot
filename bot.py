@@ -3,7 +3,7 @@ from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import (Application, CommandHandler, CallbackQueryHandler,
                           MessageHandler, filters, ContextTypes, ConversationHandler)
 
-TOKEN = "8609597914:AAEDg1sOrQ0EjSILTXJeBzl4JNv9fe-V7cE"
+TOKEN = "8609597914:AAHt8QdlrI-8lS8lrHtaohbo1_7GBP7j4qE"
 GROUP_ID = -1003968130613
 logging.basicConfig(level=logging.INFO)
 CATEGORY, RATING, COMMENT = range(3)
