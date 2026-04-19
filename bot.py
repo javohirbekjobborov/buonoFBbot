@@ -93,6 +93,11 @@ async def back_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await query.edit_message_text("👋 Xush kelibsiz! Bo'limni tanlang:", reply_markup=InlineKeyboardMarkup(kb))
         return CATEGORY
 
+async def comment_received(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await send_to_group(update, context, update.message.text)
+    await update.message.reply_text("✅ Qabul qilindi! Rahmat! 🙏\n/start — qayta boshlash")
+    return ConversationHandler.END
+
 async def skip(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await send_to_group(update, context, None)
     await update.message.reply_text("✅ Rahmat! 🙏\n/start — qayta boshlash")
