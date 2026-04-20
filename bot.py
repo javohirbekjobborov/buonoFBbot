@@ -20,7 +20,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         [InlineKeyboardButton("😡 Shikoyat yuborish", callback_data="complaint")],
     ]
     await update.message.reply_text(
-        "👋 Xush kelibsiz! Bo'limni tanlang:",
+        "👋 Xush kelibsiz, Sizning fikringiz biz uchun Muhim!😊 Bo'limni tanlang:",
         reply_markup=InlineKeyboardMarkup(kb)
     )
     return CATEGORY
@@ -36,7 +36,7 @@ async def category_chosen(update: Update, context: ContextTypes.DEFAULT_TYPE):
             [InlineKeyboardButton("💡 Taklif yuborish", callback_data="suggestion")],
             [InlineKeyboardButton("😡 Shikoyat yuborish", callback_data="complaint")],
         ]
-        await query.edit_message_text("👋 Xush kelibsiz! Bo'limni tanlang:", reply_markup=InlineKeyboardMarkup(kb))
+        await query.edit_message_text("👋 Xush kelibsiz, Sizning fikringiz biz uchun Muhim!😊 Bo'limni tanlang:", reply_markup=InlineKeyboardMarkup(kb))
         return CATEGORY
 
     context.user_data["category"] = query.data
@@ -90,7 +90,7 @@ async def back_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
             [InlineKeyboardButton("💡 Taklif yuborish", callback_data="suggestion")],
             [InlineKeyboardButton("😡 Shikoyat yuborish", callback_data="complaint")],
         ]
-        await query.edit_message_text("👋 Xush kelibsiz! Bo'limni tanlang:", reply_markup=InlineKeyboardMarkup(kb))
+        await query.edit_message_text("👋 Xush kelibsiz, Sizning fikringiz biz uchun Muhim!😊 Bo'limni tanlang:", reply_markup=InlineKeyboardMarkup(kb))
         return CATEGORY
 
 async def comment_received(update: Update, context: ContextTypes.DEFAULT_TYPE):
