@@ -62,7 +62,7 @@ async def rating_chosen(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await query.answer()
     context.user_data["rating"] = query.data
     await query.edit_message_text(
-        f"{'⭐' * int(query.data)} ({query.data}/5) baho!\n\nIzoh yozing yoki bosing👉 /skip:",
+        f"{'⭐' * int(query.data)} ({query.data}/5) baho!\n\nIzohingizni yozib yuboring yoki bosing👉 /skip:",
         reply_markup=ortga_tugma("back_to_rating")
     )
     return COMMENT
