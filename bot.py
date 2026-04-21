@@ -162,7 +162,7 @@ async def tozalik_chosen(update: Update, context: ContextTypes.DEFAULT_TYPE):
         return TAOM
     context.user_data["tozalik"] = int(query.data)
     await query.edit_message_text(
-        "💬 Izoh yozing, rasm yuboring yoki /skip:\n_(ixtiyoriy)_",
+        "💬 Izoh yozing, rasm yuboring yoki tugallash uchun bosing👉 /skip:\n_(ixtiyoriy)_",
         reply_markup=ortga_tugma("back_to_tozalik"),
         parse_mode="Markdown"
     )
