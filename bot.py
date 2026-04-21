@@ -211,7 +211,7 @@ async def rating_comment_handler(update: Update, context: ContextTypes.DEFAULT_T
     if query.data == "izohsiz_yakunla":
         await send_to_group_data(context.user_data, context, update, text=None, photo=None)
         await query.edit_message_text(
-            "✅ *Bahoyingiz qabul qilindi! Rahmat! 🙏*",
+            "✅ *Izohingiz biz uchun qadrli va rivojlanishimiz uchun katta qadam! Rahmat! 😊*",
             reply_markup=yakuniy_kb(),
             parse_mode="Markdown"
         )
