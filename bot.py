@@ -51,9 +51,9 @@ def add_stat(category, smena_key, kassir=None, taom=None, tozalik=None):
     stats = load_stats()
     s = stats[smena_key]
     if category == "feedback":
-        if kassir:  s["kassir"][str(kassir)]   = s["kassir"].get(str(kassir), 0) + 1
-        if taom:    s["taom"][str(taom)]       = s["taom"].get(str(taom), 0) + 1
-        if tozalik: s["tozalik"][str(tozalik)] = s["tozalik"].get(str(tozalik), 0) + 1
+        if kassir:  s["kassir"][str(kassir)]    = s["kassir"].get(str(kassir), 0) + 1
+        if taom:    s["taom"][str(taom)]        = s["taom"].get(str(taom), 0) + 1
+        if tozalik: s["tozalik"][str(tozalik)]  = s["tozalik"].get(str(tozalik), 0) + 1
     elif category == "suggestion":
         s["suggestion"] = s.get("suggestion", 0) + 1
     elif category == "complaint":
@@ -80,6 +80,11 @@ def izoh_kb():
         [InlineKeyboardButton("⬅️ Ortga", callback_data="back_to_tozalik")],
     ])
 
+def yakuniy_kb():
+    return InlineKeyboardMarkup([
+        [InlineKeyboardButton("🔄 Yangi fikr bildirish", callback_data="restart")]
+    ])
+
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     context.user_data.clear()
     kb = [
@@ -88,6 +93,21 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         [InlineKeyboardButton("😡 Shikoyat yuborish", callback_data="complaint")],
     ]
     await update.message.reply_text(
+        "👋 Xush kelibsiz! Bo'limni tanlang:",
+        reply_markup=InlineKeyboardMarkup(kb)
+    )
+    return CATEGORY
+
+async def restart_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    query = update.callback_query
+    await query.answer()
+    context.user_data.clear()
+    kb = [
+        [InlineKeyboardButton("⭐ Baho berish", callback_data="feedback")],
+        [InlineKeyboardButton("💡 Taklif yuborish", callback_data="suggestion")],
+        [InlineKeyboardButton("😡 Shikoyat yuborish", callback_data="complaint")],
+    ]
+    await query.edit_message_text(
         "👋 Xush kelibsiz! Bo'limni tanlang:",
         reply_markup=InlineKeyboardMarkup(kb)
     )
@@ -190,7 +210,11 @@ async def rating_comment_handler(update: Update, context: ContextTypes.DEFAULT_T
 
     if query.data == "izohsiz_yakunla":
         await send_to_group_data(context.user_data, context, update, text=None, photo=None)
-        await query.edit_message_text("✅ *Bahoyingiz qabul qilindi! Rahmat! 🙏*\n\n/start — qayta boshlash", parse_mode="Markdown")
+        await query.edit_message_text(
+            "✅ *Bahoyingiz qabul qilindi! Rahmat! 🙏*",
+            reply_markup=yakuniy_kb(),
+            parse_mode="Markdown"
+        )
         return ConversationHandler.END
 
     if query.data == "izoh_yoz":
@@ -212,24 +236,36 @@ async def rating_comment_handler(update: Update, context: ContextTypes.DEFAULT_T
 
 async def rating_text_received(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await send_to_group_data(context.user_data, context, update, text=update.message.text, photo=None)
-    await update.message.reply_text("✅ Bahoyingiz va izohingiz qabul qilindi! Rahmat! 🙏\n/start — qayta boshlash")
+    await update.message.reply_text(
+        "✅ Izohingiz biz uchun qadrli va rivojlanishimiz uchun katta qadam! Rahmat! 😊",
+        reply_markup=yakuniy_kb()
+    )
     return ConversationHandler.END
 
 async def rating_photo_received(update: Update, context: ContextTypes.DEFAULT_TYPE):
     photo = update.message.photo[-1]
     await send_to_group_data(context.user_data, context, update, text=update.message.caption, photo=photo.file_id)
-    await update.message.reply_text("✅ Bahoyingiz va rasmingiz qabul qilindi! Rahmat! 🙏\n/start — qayta boshlash")
+    await update.message.reply_text(
+        "✅ Izohingiz biz uchun qadrli va rivojlanishimiz uchun katta qadam! Rahmat! 😊",
+        reply_markup=yakuniy_kb()
+    )
     return ConversationHandler.END
 
 async def comment_received(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await send_to_group_data(context.user_data, context, update, text=update.message.text, photo=None)
-    await update.message.reply_text("✅ Qabul qilindi! Rahmat! 🙏\n/start — qayta boshlash")
+    await update.message.reply_text(
+        "✅ Izohingiz biz uchun qadrli va rivojlanishimiz uchun katta qadam! Rahmat! 😊",
+        reply_markup=yakuniy_kb()
+    )
     return ConversationHandler.END
 
 async def photo_received(update: Update, context: ContextTypes.DEFAULT_TYPE):
     photo = update.message.photo[-1]
     await send_to_group_data(context.user_data, context, update, text=update.message.caption, photo=photo.file_id)
-    await update.message.reply_text("✅ Qabul qilindi! Rahmat! 🙏\n/start — qayta boshlash")
+    await update.message.reply_text(
+        "✅ Izohingiz biz uchun qadrli va rivojlanishimiz uchun katta qadam! Rahmat! 😊",
+        reply_markup=yakuniy_kb()
+    )
     return ConversationHandler.END
 
 async def send_to_group_data(user_data, context, update, text, photo):
@@ -322,6 +358,7 @@ if __name__ == "__main__":
     )
 
     app.add_handler(CommandHandler("statistika", statistika))
+    app.add_handler(CallbackQueryHandler(restart_handler, pattern="^restart$"))
 
     app.add_handler(ConversationHandler(
         entry_points=[CommandHandler("start", start)],
@@ -331,7 +368,8 @@ if __name__ == "__main__":
             TAOM:     [CallbackQueryHandler(taom_chosen)],
             TOZALIK:  [CallbackQueryHandler(tozalik_chosen)],
             RATING_COMMENT: [
-                CallbackQueryHandler(rating_comment_handler, pattern="^(izoh_yoz|izohsiz_yakunla|back_to_tozalik|back_to_izoh_tanlov)$"),
+                CallbackQueryHandler(rating_comment_handler,
+                    pattern="^(izoh_yoz|izohsiz_yakunla|back_to_tozalik|back_to_izoh_tanlov)$"),
                 MessageHandler(filters.PHOTO, rating_photo_received),
                 MessageHandler(filters.TEXT & ~filters.COMMAND, rating_text_received),
             ],
