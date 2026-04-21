@@ -96,7 +96,7 @@ async def rating_chosen(update: Update, context: ContextTypes.DEFAULT_TYPE):
     context.user_data["rating"] = query.data
     await query.edit_message_text(
         f"{'⭐' * int(query.data)} ({query.data}/5) baho!\n\n"
-        f"Izoh yozing, rasm yuboring yoki /skip:\n"
+        f"Izoh yozing, rasm yuboring yoki tugallash uchun bosing👉 /skip:\n"
         f"_(Matn yoki rasm yuborishingiz mumkin)_",
         reply_markup=ortga_tugma("back_to_rating"),
         parse_mode="Markdown"
